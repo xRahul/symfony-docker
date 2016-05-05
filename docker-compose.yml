@@ -1,36 +1,30 @@
-application:
-    build: ./codebase
-    image: symfony/code
-    volumes:
-        - symfony:/var/www/symfony
-        - logs/symfony:/var/www/symfony/app/logs
-    tty: true
-db:
-    image: mysql
-    ports:
-        - 3306:3306
-    environment:
-        MYSQL_ROOT_PASSWORD: root
-        MYSQL_DATABASE: symfony
-        MYSQL_USER: root
-        MYSQL_PASSWORD: root
-php:
-    build: ./phpserver
-    image: symfony/php-fpm
-    expose:
-        - 9000:9000
-    volumes_from:
-        - application
-    links:
-        - db
-nginx:
-    build: ./webserver
-    image: symfony/nginx
-    ports:
-        - 80:80
-    links:
-        - php
-    volumes_from:
-        - application
-    volumes:
-        - logs/nginx:/var/log/nginx
+version: '2'
+services:
+    db:
+        image: mysql
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: symfony
+            MYSQL_USER: root
+            MYSQL_PASSWORD: root
+    php:
+        build: ./phpserver
+        expose:
+            - "9000"
+        volumes:
+            - ./symfony:/var/www/symfony
+            - ./logs/symfony:/var/www/symfony/app/logs
+        links:
+            - db
+    nginx:
+        build: ./webserver
+        ports:
+            - "80:80"
+        links:
+            - php:php
+        volumes_from:
+            - php
+        volumes:
+            - ./logs/nginx/:/var/log/nginx
