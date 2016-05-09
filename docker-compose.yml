@@ -4,6 +4,8 @@ services:
         image: mysql
         ports:
             - "3306:3306"
+        volumes:
+            - ./data/mysql:/var/lib/mysql
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: symfony
@@ -14,7 +16,7 @@ services:
         expose:
             - "9000"
         volumes:
-            - ./symfony:/var/www/symfony
+            - ./data/wwwSite:/var/www
             - ./logs/symfony:/var/www/symfony/app/logs
         links:
             - db
