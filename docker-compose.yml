@@ -1,32 +1,32 @@
-version: '2'
-services:
-    db:
-        image: mysql
-        ports:
-            - "3306:3306"
-        volumes:
-            - ./data/mysql:/var/lib/mysql
-        environment:
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: symfony
-            MYSQL_USER: root
-            MYSQL_PASSWORD: root
-    php:
-        build: ./phpserver
-        expose:
-            - "9000"
-        volumes:
-            - ./data/wwwSite:/var/www
-            - ./logs/symfony:/var/www/symfony/app/logs
-        links:
-            - db
-    nginx:
-        build: ./webserver
-        ports:
-            - "80:80"
-        links:
-            - php:php
-        volumes_from:
-            - php
-        volumes:
-            - ./logs/nginx/:/var/log/nginx
+db:
+    image: mysql
+    hostname: qadbp1
+#    ports:
+#        - "3306:3306"
+    volumes:
+        - ./data/mysql:/var/lib/mysql
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: configdb
+        MYSQL_USER: confuser
+        MYSQL_PASSWORD: C0nfUser
+php:
+    build: ./phpserver
+    expose:
+        - "9000"
+    volumes:
+        - ./data/CMT-3:/var/www
+        - ./logs/symfony:/var/www/backend/app/logs
+        - ./data/TicketContents:/home/shopclue
+    links:
+        - db:qadbp1
+nginx:
+    build: ./webserver
+    ports:
+        - "80:80"
+    links:
+        - php:php
+    volumes_from:
+        - php
+    volumes:
+        - ./logs/nginx/:/var/log/nginx

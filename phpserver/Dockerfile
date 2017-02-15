@@ -1,11 +1,12 @@
 FROM centos:6
+MAINTAINER Rahul Jain <rahul.jain@shopclues.com>
 
-RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
-RUN rpm -Uvh https://mirror.webtatic.com/yum/el6/latest.rpm
 
-RUN yum -y update
-
-RUN yum -y install php54w-common php54w-cli php54w-fpm php54w-mcrypt php54w-mysql php54w-pecl-apc php54w-gd php54w-intl php54w-xml php54w-mbstring php54w-process php54w-pdo php54w-pecl-xdebug 
+RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm && \
+    rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm && \
+    yum update -y && \
+    yum upgrade -y && \
+    yum install -y --enablerepo=remi php-common php-cli php-fpm php-mcrypt php-pecl-apc php-gd php-intl php-xml php-mbstring php-process php-pdo php-peck-xdebug php php-dom curl php-curl openssl openssl-devel php-bcmath php-devel php-mysql php-odbc php-pdo php-pear php-pecl-apcu php-pecl-igbinary php-pecl-memcache php-pecl-memcached php-pecl-mongo php-pecl-msgpack php-pecl-redis php-pecl-solr php-pecl-sqlite php-phalcon php-soap
 
 ADD symfony.ini /etc/php-fpm.d/
 ADD symfony.ini /etc/php.d/
@@ -15,7 +16,7 @@ ADD symfony.pool.conf /etc/php-fpm.d/
 
 ####composer to install symfony2.8
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-RUN php -r "if (hash_file('SHA384', 'composer-setup.php') === '92102166af5abdb03f49ce52a40591073a7b859a86e8ff13338cf7db58a19f7844fbc0bb79b2773bf30791e935dbd938') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+RUN php -r "if (hash_file('SHA384', 'composer-setup.php') === '55d6ead61b29c7bdee5cccfb50076874187bd9f21f65d8991d46ec5cc90518f447387fb9f76ebae1fbbacf329e583e30') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
 RUN php composer-setup.php
 RUN php -r "unlink('composer-setup.php');"
 RUN mv composer.phar /usr/local/bin/composer
